@@ -235,6 +235,9 @@ void can_init(uint8_t can_number) {
 #endif
   }
 
+  uint8_t bus_number = BUS_NUM_FROM_CAN_NUM(can_number);
+  can_clear(can_queues[bus_number]);
+
   // in case there are queued up messages
   process_can(can_number);
 }
