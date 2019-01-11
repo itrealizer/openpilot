@@ -84,6 +84,9 @@ class CarInterface(object):
       ret.steerRatio = 12.7
       ret.steerActuatorDelay = 0.2  # in seconds
 
+    if candidate == CAR.CHEROKEE:
+      ret.wheelbase = 2.91  # in meters
+
     ret.centerToFront = ret.wheelbase * 0.44
 
     ret.longPidDeadzoneBP = [0., 9.]
