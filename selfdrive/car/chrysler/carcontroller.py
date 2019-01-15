@@ -39,9 +39,9 @@ class CarController(object):
   def update(self, sendcan, enabled, CS, frame, actuators,
              pcm_cancel_cmd, hud_alert, audible_alert):
 
-    # this seems needed to avoid steering faults and to force the sync with the EPS counter
-    if self.prev_frame == frame:
-      return
+    # # this seems needed to avoid steering faults and to force the sync with the EPS counter
+    # if self.prev_frame == frame:
+    #   return
 
     # *** compute control surfaces ***
     # steer torque
@@ -50,7 +50,8 @@ class CarController(object):
                                                    CS.steer_torque_motor, SteerLimitParams)
 
     moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
-    lkas_active = moving_fast and enabled
+    # lkas_active = moving_fast and enabled
+    lkas_active = moving_fast # and enabled
 
     if not lkas_active:
       apply_steer = 0
@@ -59,6 +60,10 @@ class CarController(object):
 
     if audible_alert in LOUD_ALERTS:
       self.send_chime = True
+
+    # # this seems needed to avoid steering faults and to force the sync with the EPS counter
+    if self.prev_frame == frame:
+      return
 
     can_sends = []
 
