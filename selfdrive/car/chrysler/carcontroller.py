@@ -86,7 +86,7 @@ class CarController(object):
       can_sends.append(new_msg)
 
     if (self.ccframe % 25 == 0):  # 0.25s period
-      new_msg = create_lkas_hud(CS.gear_shifter, lkas_active, hud_alert, self.car_fingerprint)
+      new_msg = create_lkas_hud(CS.gear_shifter, lkas_active, hud_alert, self.car_fingerprint, apply_steer)
       can_sends.append(new_msg)
 
     new_msg = create_lkas_command(self.packer, int(apply_steer), frame)
