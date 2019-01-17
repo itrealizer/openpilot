@@ -1,4 +1,3 @@
-import logging
 from selfdrive.can.parser import CANParser
 from selfdrive.car.chrysler.values import DBC, STEER_THRESHOLD
 from common.kalman.simple_kalman import KF1D
@@ -65,10 +64,6 @@ def get_can_parser(CP):
 
 class CarState(object):
   def __init__(self, CP):
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/chrylog", filemode="a+",
-                        format="%(asctime)-15s %(levelname)-8s %(message)s")
-    logging.info("CarState __init__")
-
     self.CP = CP
     self.left_blinker_on = 0
     self.right_blinker_on = 0
@@ -97,7 +92,6 @@ class CarState(object):
 
     self.frame_23b = int(cp.vl["WHEEL_BUTTONS"]['COUNTER'])
     self.frame = int(cp.vl["EPS_STATUS"]['COUNTER'])
-    logging.info(self.frame)
 
     self.door_all_closed = not any([cp.vl["DOORS"]['DOOR_OPEN_FL'],
                                     cp.vl["DOORS"]['DOOR_OPEN_FR'],
