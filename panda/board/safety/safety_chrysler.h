@@ -13,6 +13,8 @@ uint32_t chrysler_ts_last = 0;
 struct sample_t chrysler_torque_meas;         // last few torques measured
 
 static void chrysler_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
+  controls_allowed = 1; ///!!!!
+  return; ////!!!!
   int bus = (to_push->RDTR >> 4) & 0xFF;
   uint32_t addr;
   if (to_push->RIR & 4) {
@@ -53,7 +55,7 @@ static void chrysler_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 }
 
 static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-
+  return true; ////!!!!
   // There can be only one! (camera)
   if (chrysler_camera_detected) {
     return 0;
