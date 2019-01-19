@@ -1,8 +1,8 @@
 const int CHRYSLER_MAX_STEER = 261;
-const int CHRYSLER_MAX_RT_DELTA = 112;        // max delta torque allowed for real time checks
-const int32_t CHRYSLER_RT_INTERVAL = 250000;  // 250ms between real time checks
-const int CHRYSLER_MAX_RATE_UP = 3;
-const int CHRYSLER_MAX_RATE_DOWN = 3;
+const int CHRYSLER_MAX_RT_DELTA = 112 * 2;   // max delta torque allowed for real time checks.
+const int32_t CHRYSLER_RT_INTERVAL = 250000; // 250ms between real time checks
+const int CHRYSLER_MAX_RATE_UP = 3 * 10;     // do not want to strictly enforce 3 in case we miss a message or two.
+const int CHRYSLER_MAX_RATE_DOWN = 3 * 10;
 const int CHRYSLER_MAX_TORQUE_ERROR = 80;    // max torque cmd in excess of torque motor
 
 int chrysler_camera_detected = 0;
@@ -13,8 +13,6 @@ uint32_t chrysler_ts_last = 0;
 struct sample_t chrysler_torque_meas;         // last few torques measured
 
 static void chrysler_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
-  controls_allowed = 1; ///!!!!
-  return; ////!!!!
   int bus = (to_push->RDTR >> 4) & 0xFF;
   uint32_t addr;
   if (to_push->RIR & 4) {
@@ -55,7 +53,7 @@ static void chrysler_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 }
 
 static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-  return true; ////!!!!
+
   // There can be only one! (camera)
   if (chrysler_camera_detected) {
     return 0;
@@ -101,19 +99,19 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       }
     }
 
-    // no torque if controls is not allowed
+    // No more torque if controls are not allowed.
+    // Resetting back to 0 sometimes faults the car.
+    // Occasionally when controls are disabled, will get a stale message with the same torque.
     if (!controls_allowed && (desired_torque != 0)) {
-      violation = 1;
-    }
-
-    // reset to 0 if either controls is not allowed or there's a violation
-    if (violation || !controls_allowed) {
-      chrysler_desired_torque_last = 0;
-      chrysler_rt_torque_last = 0;
-      chrysler_ts_last = ts;
+      violation |= 1;  ////!!!!
+      violation |= (chrysler_desired_torque_last > 0) && (desired_torque > chrysler_desired_torque_last);
+      violation |= (chrysler_desired_torque_last < 0) && (desired_torque < chrysler_desired_torque_last);
     }
 
     if (violation) {
+      chrysler_desired_torque_last = 0;
+      chrysler_rt_torque_last = 0;
+      chrysler_ts_last = ts;
       return false;
     }
   }
