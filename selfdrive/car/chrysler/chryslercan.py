@@ -55,7 +55,7 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
   # LKAS_HUD (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert == VisualAlert.steerRequired:
-    msg = msg = '0000000300000000'.decode('hex')
+    msg = '0000000300000000'.decode('hex')
     return make_can_msg(0x2a6, msg)
 
   # TODO: use can packer
@@ -67,7 +67,7 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
   elif car_fingerprint == CAR.PACIFICA_2018_HYBRID:
     msg = '01a8010000000000'.decode('hex')
   elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-    msg = '01a8010000000000'.decode('hex')
+    msg = '0168010000000000'.decode('hex')  # Have not verified 2019 park with a real car.
   if (gear == 'drive' or gear == 'reverse'):
     if lkas_active:
       msg = '0200060000000000'.decode('hex') # control active, display green.
@@ -78,7 +78,7 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
       elif car_fingerprint == CAR.PACIFICA_2018_HYBRID:
         msg = '02a8060000000000'.decode('hex')
       elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-        msg = '02a8060000000000'.decode('hex')
+        msg = '0268060000000000'.decode('hex')
     else:
       msg = '0100010000000000'.decode('hex') # control off, display white.
       if car_fingerprint == CAR.PACIFICA_2018:
@@ -88,11 +88,15 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
       elif car_fingerprint == CAR.PACIFICA_2018_HYBRID:
         msg = '01a8010000000000'.decode('hex')
       elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-        msg = '01a8010000000000'.decode('hex')
+        msg = '0168010000000000'.decode('hex')
     if apply_steer > 0: # steering left
       msg = '03000a0000000000'.decode('hex') # when torqueing, display yellow.
+      if car_fingerprint == CAR.PACIFICA_2019_HYBRID:
+        msg = '03680a0000000000'.decode('hex')
     elif apply_steer < 0: # steering right
       msg = '0300080000000000'.decode('hex') # when torqueing, display yellow.
+      if car_fingerprint == CAR.PACIFICA_2019_HYBRID:
+        msg = '0368080000000000'.decode('hex')
 
   return make_can_msg(0x2a6, msg)
 
