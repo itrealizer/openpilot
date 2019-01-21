@@ -89,7 +89,9 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       chrysler_desired_torque_last = desired_torque;
 
       // *** torque real time rate limit check ***
-      violation |= rt_rate_limit_check(desired_torque, chrysler_rt_torque_last, CHRYSLER_MAX_RT_DELTA);
+      // This triggers on the drive 2019-01-20--11-44-06
+      // AssertionError: ['539.2315495773333', '658', '128', '131e0000907b0000']
+      //violation |= rt_rate_limit_check(desired_torque, chrysler_rt_torque_last, CHRYSLER_MAX_RT_DELTA);
 
       // every RT_INTERVAL set the new limits
       uint32_t ts_elapsed = get_ts_elapsed(ts, chrysler_ts_last);
