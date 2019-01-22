@@ -89,14 +89,6 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
         msg = '01a8010000000000'.decode('hex')
       elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
         msg = '0168010000000000'.decode('hex')
-    if apply_steer > 0: # steering left
-      msg = '03000a0000000000'.decode('hex') # when torqueing, display yellow.
-      if car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-        msg = '03680a0000000000'.decode('hex')
-    elif apply_steer < 0: # steering right
-      msg = '0300080000000000'.decode('hex') # when torqueing, display yellow.
-      if car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-        msg = '0368080000000000'.decode('hex')
 
   return make_can_msg(0x2a6, msg)
 
