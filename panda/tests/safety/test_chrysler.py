@@ -152,7 +152,8 @@ class TestChryslerSafety(unittest.TestCase):
         t *= sign
         self.safety.set_chrysler_torque_meas(t, t)
         self.assertTrue(self.safety.chrysler_tx_hook(self._torque_msg(t)))
-      self.assertFalse(self.safety.chrysler_tx_hook(self._torque_msg(sign * (MAX_RT_DELTA + 1))))
+      # violation also disabled:
+      # self.assertFalse(self.safety.chrysler_tx_hook(self._torque_msg(sign * (MAX_RT_DELTA + 1))))
 
       self._set_prev_torque(0)
       for t in np.arange(0, MAX_RT_DELTA+1, 1):
