@@ -59,8 +59,6 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
     return 0;
   }
 
-  return true;  ///!!!!
-
   uint32_t addr;
   if (to_send->RIR & 4) {
     // Extended

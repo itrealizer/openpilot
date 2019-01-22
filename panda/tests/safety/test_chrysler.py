@@ -26,12 +26,10 @@ def sign(a):
   else:
     return -1
 
-
 def swap_bytes(data_str):
   """Accepts string with hex, returns integer with order swapped for CAN."""
   a = int(data_str, 16)
   return ((a & 0xff) << 24) + ((a & 0xff00) << 8) + ((a & 0x00ff0000) >> 8) + ((a & 0xff000000) >> 24)
-
 
 class TestChryslerSafety(unittest.TestCase):
   @classmethod

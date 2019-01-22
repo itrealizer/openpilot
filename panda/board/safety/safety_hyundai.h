@@ -16,7 +16,6 @@ uint32_t hyundai_ts_last = 0;
 struct sample_t hyundai_torque_driver;         // last few driver torques measured
 
 static void hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
-  return;
   int bus = (to_push->RDTR >> 4) & 0xFF;
   uint32_t addr;
   if (to_push->RIR & 4) {
@@ -65,7 +64,6 @@ static void hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 }
 
 static int hyundai_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-  return 1;
   // There can be only one! (camera)
   if (hyundai_camera_detected) {
     return 0;
