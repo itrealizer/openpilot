@@ -51,7 +51,7 @@ def create_lkas_heartbit(car_fingerprint):
   msg = '0000000820'.decode('hex')  # 2017
   return make_can_msg(0x2d9, msg)
 
-def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, apply_steer):
+def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
   # LKAS_HUD (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert == VisualAlert.steerRequired:
