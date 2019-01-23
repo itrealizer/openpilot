@@ -50,8 +50,7 @@ class CarController(object):
                                                    CS.steer_torque_motor, SteerLimitParams)
 
     moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
-    # lkas_active = moving_fast and enabled
-    lkas_active = moving_fast # and enabled
+    lkas_active = moving_fast and enabled
 
     if not lkas_active:
       apply_steer = 0
