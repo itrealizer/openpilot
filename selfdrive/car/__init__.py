@@ -26,16 +26,22 @@ def apply_std_steer_torque_limits(apply_torque, apply_torque_last, driver_torque
   return int(round(apply_torque))
 
 
-def apply_toyota_steer_torque_limits(apply_steer, last_steer,
-                                     steer_torque_motor, LIMITS):
-  max_lim = min(max(steer_torque_motor + LIMITS.STEER_ERROR_MAX, LIMITS.STEER_ERROR_MAX), LIMITS.STEER_MAX)
-  min_lim = max(min(steer_torque_motor - LIMITS.STEER_ERROR_MAX, -LIMITS.STEER_ERROR_MAX), -LIMITS.STEER_MAX)
-  apply_steer = clip(apply_steer, min_lim, max_lim)
+def apply_toyota_steer_torque_limits(apply_torque, apply_torque_last, motor_torque, LIMITS):
+
+  # limits due to comparison of commanded torque VS motor reported torque
+  max_lim = min(max(motor_torque + LIMITS.STEER_ERROR_MAX, LIMITS.STEER_ERROR_MAX), LIMITS.STEER_MAX)
+  min_lim = max(min(motor_torque - LIMITS.STEER_ERROR_MAX, -LIMITS.STEER_ERROR_MAX), -LIMITS.STEER_MAX)
+
+  apply_torque = clip(apply_torque, min_lim, max_lim)
 
   # slow rate if steer torque increases in magnitude
-  if last_steer > 0:
-    apply_steer = clip(apply_steer, max(last_steer - LIMITS.STEER_DELTA_DOWN, - LIMITS.STEER_DELTA_UP), last_steer + LIMITS.STEER_DELTA_UP)
+  if apply_torque_last > 0:
+    apply_torque = clip(apply_torque,
+                        max(apply_torque_last - LIMITS.STEER_DELTA_DOWN, -LIMITS.STEER_DELTA_UP),
+                        apply_torque_last + LIMITS.STEER_DELTA_UP)
   else:
-    apply_steer = clip(apply_steer, last_steer - LIMITS.STEER_DELTA_UP, min(last_steer + LIMITS.STEER_DELTA_DOWN, LIMITS.STEER_DELTA_UP))
+    apply_torque = clip(apply_torque,
+                        apply_torque_last - LIMITS.STEER_DELTA_UP,
+                        min(apply_torque_last + LIMITS.STEER_DELTA_DOWN, LIMITS.STEER_DELTA_UP))
 
-  return int(round(apply_steer))
+  return int(round(apply_torque))
