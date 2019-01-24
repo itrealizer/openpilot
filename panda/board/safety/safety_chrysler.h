@@ -82,8 +82,8 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       violation |= max_limit_check(desired_torque, CHRYSLER_MAX_STEER, -CHRYSLER_MAX_STEER);
 
       // *** torque rate limit check ***
-      violation |= dist_to_meas_check(desired_torque, chrysler_desired_torque_last,
-        &chrysler_torque_meas, CHRYSLER_MAX_RATE_UP, CHRYSLER_MAX_RATE_DOWN, CHRYSLER_MAX_TORQUE_ERROR);
+      //violation |= dist_to_meas_check(desired_torque, chrysler_desired_torque_last,
+      // &chrysler_torque_meas, CHRYSLER_MAX_RATE_UP, CHRYSLER_MAX_RATE_DOWN, CHRYSLER_MAX_TORQUE_ERROR);
 
       // used next time
       chrysler_desired_torque_last = desired_torque;
@@ -111,9 +111,9 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
     }
 
     if (violation) {
-      chrysler_desired_torque_last = 0;
-      chrysler_rt_torque_last = 0;
-      chrysler_ts_last = ts;
+      /* chrysler_desired_torque_last = 0; */
+      /* chrysler_rt_torque_last = 0; */
+      /* chrysler_ts_last = ts; */
       return false;
     }
   }
