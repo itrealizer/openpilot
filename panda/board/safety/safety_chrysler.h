@@ -82,11 +82,12 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       violation |= max_limit_check(desired_torque, CHRYSLER_MAX_STEER, -CHRYSLER_MAX_STEER);
 
       // *** torque rate limit check ***
+      // This triggers on drives if the driver moves the wheel a lot.
+      // TODO figure out how to add this back in. For now using a simpler rate check.
       //violation |= dist_to_meas_check(desired_torque, chrysler_desired_torque_last,
       // &chrysler_torque_meas, CHRYSLER_MAX_RATE_UP, CHRYSLER_MAX_RATE_DOWN, CHRYSLER_MAX_TORQUE_ERROR);
-
-      // used next time
-      chrysler_desired_torque_last = desired_torque;
+      violation |= (desired_torque < (chrysler_desired_torque_last - CHRYSLER_MAX_RATE_DOWN));
+      violation |= (desired_torque > (chrysler_desired_torque_last + CHRYSLER_MAX_RATE_UP));
 
       // *** torque real time rate limit check ***
       // This triggers on the drive 2019-01-20--11-44-06
@@ -110,10 +111,13 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       violation |= (chrysler_desired_torque_last == 0);
     }
 
+    // used next time
+    chrysler_desired_torque_last = desired_torque;
+
     if (violation) {
-      /* chrysler_desired_torque_last = 0; */
-      /* chrysler_rt_torque_last = 0; */
-      /* chrysler_ts_last = ts; */
+      // chrysler_desired_torque_last = 0;
+      // chrysler_rt_torque_last = 0;
+      // chrysler_ts_last = ts;
       return false;
     }
   }
