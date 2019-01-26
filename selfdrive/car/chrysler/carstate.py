@@ -64,6 +64,7 @@ def get_can_parser(CP):
 
 class CarState(object):
   def __init__(self, CP):
+
     self.CP = CP
     self.left_blinker_on = 0
     self.right_blinker_on = 0

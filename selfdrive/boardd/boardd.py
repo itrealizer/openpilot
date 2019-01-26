@@ -26,7 +26,7 @@ except Exception:
 SAFETY_NOOUTPUT = 0
 SAFETY_HONDA = 1
 SAFETY_TOYOTA = 2
-SAFETY_CHRYSLER = 8
+SAFETY_CHRYSLER = 9
 SAFETY_TOYOTA_NOLIMITS = 0x1336
 SAFETY_ALLOUTPUT = 0x1337
 
@@ -181,6 +181,7 @@ def boardd_loop(rate=200):
       msg.health.voltage = health['voltage']
       msg.health.current = health['current']
       msg.health.started = health['started']
+      msg.health.controlsAllowed = True
 
       health_sock.send(msg.to_bytes())
 
