@@ -64,7 +64,6 @@ static void hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 }
 
 static int hyundai_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-
   // There can be only one! (camera)
   if (hyundai_camera_detected) {
     return 0;
