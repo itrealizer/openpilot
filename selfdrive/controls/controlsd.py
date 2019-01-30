@@ -520,7 +520,6 @@ def controlsd_thread(gctx=None, rate=100, default_bias=0.):
     CC = data_send(PL.perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, actuators, v_cruise_kph, rk, carstate, carcontrol,
                    live100, livempc, AM, driver_status, LaC, LoC, angle_offset, passive, start_time)
     prof.checkpoint("Sent")
-    gc.collect()
 
     rk.keep_time()  # Run at 100Hz
     prof.display()
