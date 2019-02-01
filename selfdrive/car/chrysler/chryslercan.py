@@ -68,7 +68,7 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
     msg = '01a8010000000000'.decode('hex')
   elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
     msg = '0168010000000000'.decode('hex')  # Have not verified 2019 park with a real car.
-  if (gear == 'drive' or gear == 'reverse'):
+  if gear in ('drive', 'reverse', 'low'):
     if lkas_active:
       msg = '0200060000000000'.decode('hex') # control active, display green.
       if car_fingerprint == CAR.PACIFICA_2018:
