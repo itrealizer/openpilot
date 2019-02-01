@@ -402,7 +402,7 @@ def data_send(perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, ac
   return CC
 
 
-def controlsd_thread(gctx=None, rate=100, default_bias=0.):
+def controlsd_thread(gctx=None, rate=200, default_bias=0.):
   gc.disable()
 
   # start the loop
@@ -526,7 +526,7 @@ def controlsd_thread(gctx=None, rate=100, default_bias=0.):
 
 
 def main(gctx=None):
-  controlsd_thread(gctx, 100)
+  controlsd_thread(gctx, rate=200)
 
 
 if __name__ == "__main__":
