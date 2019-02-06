@@ -492,6 +492,7 @@ def controlsd_thread(gctx=None, rate=200, default_bias=0.):
 
   prof = Profiler(False)  # off by default
 
+  prev_frame = -2  # -1 already used as default CS.frame
   while True:
     start_time = int(sec_since_boot() * 1e9)
     prof.checkpoint("Ratekeeper", ignore=True)
@@ -500,6 +501,10 @@ def controlsd_thread(gctx=None, rate=200, default_bias=0.):
     CS, events, cal_status, cal_perc, overtemp, free_space, low_battery, mismatch_counter = data_sample(CI, CC, thermal, cal, health,
       driver_monitor, gps_location, poller, cal_status, cal_perc, overtemp, free_space, low_battery, driver_status, geofence, state, mismatch_counter, params)
     prof.checkpoint("Sample")
+    # TODO only do this check and rate=200 for Chrysler.
+    if prev_frame == CS.frame:
+      continue
+    prev_fame = CS.frame
 
     # Define longitudinal plan (MPC)
     plan, plan_ts = calc_plan(CS, CP, VM, events, PL, LaC, LoC, v_cruise_kph, driver_status, geofence)
