@@ -504,7 +504,7 @@ def controlsd_thread(gctx=None, rate=200, default_bias=0.):
     # TODO only do this check and rate=200 for Chrysler.
     if prev_frame == CS.frame:
       continue
-    prev_fame = CS.frame
+    prev_frame = CS.frame
 
     # Define longitudinal plan (MPC)
     plan, plan_ts = calc_plan(CS, CP, VM, events, PL, LaC, LoC, v_cruise_kph, driver_status, geofence)
