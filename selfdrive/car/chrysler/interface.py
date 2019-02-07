@@ -145,6 +145,8 @@ class CarInterface(object):
     # create message
     ret = car.CarState.new_message()
 
+    ret.frame = self.CS.frame  # for controlsd
+
     # speeds
     ret.vEgo = self.CS.v_ego
     ret.vEgoRaw = self.CS.v_ego_raw

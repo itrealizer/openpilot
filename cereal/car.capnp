@@ -121,6 +121,8 @@ struct CarState {
   doorOpen @24 :Bool;
   seatbeltUnlatched @25 :Bool;
 
+  frame @26 :UInt64;  # only for Chrysler.
+
   # which packets this state came from
   canMonoTimes @12: List(UInt64);
 
