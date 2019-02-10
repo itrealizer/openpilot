@@ -58,6 +58,9 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
     msg = '0000000300000000'.decode('hex')
     return make_can_msg(0x2a6, msg)
 
+  # msg = '0000010100000000'.decode('hex')  # 2017 first 3 seconds.
+  # msg = '0168010100000000'.decode('hex')  # 2019 first 3 seconds.
+  # msg = '0000010000000000'.decode('hex')  # 2017 after 3 seconds.
   # TODO: use can packer
   msg = '0000000000000000'.decode('hex')  # park or neutral
   if car_fingerprint == CAR.PACIFICA_2018:
@@ -67,7 +70,8 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
   elif car_fingerprint == CAR.PACIFICA_2018_HYBRID:
     msg = '01a8010000000000'.decode('hex')
   elif car_fingerprint == CAR.PACIFICA_2019_HYBRID:
-    msg = '0168010000000000'.decode('hex')  # Have not verified 2019 park with a real car.
+    # msg = '0168010000000000'.decode('hex')  # Have not verified 2019 park with a real car.
+    msg = '0068000000000000'.decode('hex')  # guessing this based on other year's messages
   if gear in ('drive', 'reverse', 'low'):
     if lkas_active:
       msg = '0200060000000000'.decode('hex') # control active, display green.
