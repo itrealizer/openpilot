@@ -97,11 +97,11 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
   return make_can_msg(0x2a6, msg)
 
 
-def create_lkas_command(packer, apply_steer, frame, moving_medium):
+def create_lkas_command(packer, apply_steer, frame):
   # LKAS_COMMAND (658) Lane-keeping signal to turn the wheel.
   values = {
     "LKAS_STEERING_TORQUE": apply_steer,
-    "LKAS_HIGH_TORQUE": int(moving_medium),  # 0 or 1
+    "LKAS_HIGH_TORQUE": 1,
     "COUNTER": frame % 0x10,
   }
 
