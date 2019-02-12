@@ -44,6 +44,7 @@ class CarController(object):
       return
 
     moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
+    moving_medium = CS.v_ego > (CS.CP.minSteerSpeed - 2)  # for status message
     lkas_active = moving_fast and enabled
 
     # *** compute control surfaces ***
@@ -82,7 +83,7 @@ class CarController(object):
       new_msg = create_lkas_hud(CS.gear_shifter, lkas_active, hud_alert, self.car_fingerprint)
       can_sends.append(new_msg)
 
-    new_msg = create_lkas_command(self.packer, int(apply_steer), frame)
+    new_msg = create_lkas_command(self.packer, int(apply_steer), frame, moving_medium)
     can_sends.append(new_msg)
 
     self.ccframe += 1
