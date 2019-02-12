@@ -51,7 +51,7 @@ def create_lkas_heartbit(car_fingerprint):
   msg = '0000000820'.decode('hex')  # 2017
   return make_can_msg(0x2d9, msg)
 
-def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
+def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint, hud_count):
   # LKAS_HUD (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert == VisualAlert.steerRequired:
@@ -60,6 +60,10 @@ def create_lkas_hud(gear, lkas_active, hud_alert, car_fingerprint):
 
   # TODO: use can packer
   msg = '0000000000000000'.decode('hex')  # park or neutral
+  if hud_count < (3 *4):  # first 3 seconds, 4Hz
+    msg = '0000010100000000'.decode('hex')
+  elif hud_count < (6 * 4):  # next 3 seconds, 4Hz
+    msg = '0000010000000000'.decode('hex')
   if car_fingerprint == CAR.PACIFICA_2018:
     msg = '0064000000000000'.decode('hex')  # Have not verified 2018 park with a real car.
   elif car_fingerprint == CAR.JEEP_CHEROKEE:
