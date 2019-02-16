@@ -1,6 +1,7 @@
 import chryslercan
 from values import CAR
 from carcontroller import CarController
+from selfdrive.can.packer import CANPacker
 
 from cereal import car
 VisualAlert = car.CarControl.HUDControl.VisualAlert
@@ -21,25 +22,26 @@ class TestChryslerCan(unittest.TestCase):
         chryslercan.create_lkas_heartbit(CAR.PACIFICA_2017_HYBRID))
 
   def test_hud(self):
+    packer = CANPacker('chrysler_pacifica_2017_hybrid')
     self.assertEqual(
         [0x2a6, 0, '0000010100000000'.decode('hex'), 0],
-        chryslercan.create_lkas_hud(
+        chryslercan.create_lkas_hud(packer,
             'park', False, False, CAR.PACIFICA_2017_HYBRID, 1))
     self.assertEqual(
         [0x2a6, 0, '0000010000000000'.decode('hex'), 0],
-        chryslercan.create_lkas_hud(
+        chryslercan.create_lkas_hud(packer,
             'park', False, False, CAR.PACIFICA_2017_HYBRID, 5*4))
     self.assertEqual(
         [0x2a6, 0, '0000000000000000'.decode('hex'), 0],
-        chryslercan.create_lkas_hud(
+        chryslercan.create_lkas_hud(packer,
             'park', False, False, CAR.PACIFICA_2017_HYBRID, 99999))
     self.assertEqual(
         [0x2a6, 0, '0200060000000000'.decode('hex'), 0],
-        chryslercan.create_lkas_hud(
+        chryslercan.create_lkas_hud(packer,
             'drive', True, False, CAR.PACIFICA_2017_HYBRID, 99999))
     self.assertEqual(
         [0x2a6, 0, '0264060000000000'.decode('hex'), 0],
-        chryslercan.create_lkas_hud(
+        chryslercan.create_lkas_hud(packer,
             'drive', True, False, CAR.PACIFICA_2018, 99999))
 
 if __name__ == '__main__':
