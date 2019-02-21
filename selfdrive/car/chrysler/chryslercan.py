@@ -59,7 +59,7 @@ def create_lkas_heartbit(car_fingerprint):
   return make_can_msg(0x2d9, msg)
 
 def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_count):
-  # LKAS_HUD (678) Controls what lane-keeping icon is displayed.
+  # LKAS_HUD 0x2a6 (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert == VisualAlert.steerRequired:
     msg = '0000000300000000'.decode('hex')
@@ -85,7 +85,6 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
       color = 1  # control off, display white.
       lines = 1
 
-  # TODO: use can packer
   values = {
     "LKAS_ICON_COLOR": color,  # byte 0, last 2 bits
     "CAR_MODEL": MODEL_TO_CONSTANT[car_fingerprint],  # byte 1
@@ -94,7 +93,6 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
     }
 
   return packer.make_can_msg("LKAS_HUD", 0, values)  # 0x2a6
-  # return make_can_msg(0x2a6, msg)
 
 
 def create_lkas_command(packer, apply_steer, frame):
