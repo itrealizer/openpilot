@@ -65,10 +65,10 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
     msg = '0000000300000000'.decode('hex')
     return make_can_msg(0x2a6, msg)
 
-  color = 0
+  color = 0  # default values are for park or neutral
   lines = 0
   alerts = 0
-  msg = '0000000000000000'.decode('hex')  # park or neutral
+
   if hud_count < (3 *4):  # first 3 seconds, 4Hz
     lines = 1
     alerts = 1
