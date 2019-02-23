@@ -83,9 +83,9 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
 
       // *** torque rate limit check ***
       // This triggers on drives if the driver moves the wheel a lot.
-      // TODO figure out how to add this back in. For now using a simpler rate check.
-      //violation |= dist_to_meas_check(desired_torque, chrysler_desired_torque_last,
-      // &chrysler_torque_meas, CHRYSLER_MAX_RATE_UP, CHRYSLER_MAX_RATE_DOWN, CHRYSLER_MAX_TORQUE_ERROR);
+      // TODO Figure out how to add this back in. For now using a simpler rate check.
+      // violation |= dist_to_meas_check(desired_torque, chrysler_desired_torque_last,
+      //     &chrysler_torque_meas, CHRYSLER_MAX_RATE_UP, CHRYSLER_MAX_RATE_DOWN, CHRYSLER_MAX_TORQUE_ERROR);
       violation |= (desired_torque < (chrysler_desired_torque_last - CHRYSLER_MAX_RATE_DOWN));
       violation |= (desired_torque > (chrysler_desired_torque_last + CHRYSLER_MAX_RATE_UP));
       
@@ -93,9 +93,8 @@ static int chrysler_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       chrysler_desired_torque_last = desired_torque;
 
       // *** torque real time rate limit check ***
-      // This triggers on the drive 2019-01-20--11-44-06
-      // AssertionError: ['539.2315495773333', '658', '128', '131e0000907b0000']
-      //violation |= rt_rate_limit_check(desired_torque, chrysler_rt_torque_last, CHRYSLER_MAX_RT_DELTA);
+      // TODO This triggers on some drives. Figure out how to add it back in.
+      // violation |= rt_rate_limit_check(desired_torque, chrysler_rt_torque_last, CHRYSLER_MAX_RT_DELTA);
 
       // every RT_INTERVAL set the new limits
       uint32_t ts_elapsed = get_ts_elapsed(ts, chrysler_ts_last);
