@@ -44,16 +44,18 @@ class CarController(object):
     if self.prev_frame == frame:
       return
 
-    moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
-    lkas_active = moving_fast and enabled
-
     # *** compute control surfaces ***
     # steer torque
     apply_steer = actuators.steer * SteerLimitParams.STEER_MAX
-    if not lkas_active:
-      apply_steer = 0
     apply_steer = apply_toyota_steer_torque_limits(apply_steer, self.apply_steer_last,
                                                    CS.steer_torque_motor, SteerLimitParams)
+
+    moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
+    lkas_active = moving_fast and enabled
+
+    if not lkas_active:
+      apply_steer = 0
+
     self.apply_steer_last = apply_steer
 
     if audible_alert in LOUD_ALERTS:
