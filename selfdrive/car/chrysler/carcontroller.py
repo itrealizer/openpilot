@@ -1,3 +1,4 @@
+import logging
 from cereal import car
 from selfdrive.boardd.boardd import can_list_to_can_capnp
 from selfdrive.car import apply_toyota_steer_torque_limits
@@ -19,6 +20,9 @@ class SteerLimitParams:
 
 class CarController(object):
   def __init__(self, dbc_name, car_fingerprint, enable_camera):
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/chrylog", filemode="a+",
+                        format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarController __init__")
     self.braking = False
     # redundant safety check with the board
     self.controls_allowed = True
@@ -39,7 +43,9 @@ class CarController(object):
 
   def update(self, sendcan, enabled, CS, frame, actuators,
              pcm_cancel_cmd, hud_alert, audible_alert):
-
+    # TODO is this the right way to access CS values?
+    logging.info('lkas_counter: %d   lkas_car_model %d',
+                 CS.lkas_counter, CS.lkas_car_model)
     # this seems needed to avoid steering faults and to force the sync with the EPS counter
     if self.prev_frame == frame:
       return

@@ -4,7 +4,7 @@ from cereal import car
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.drive_helpers import EventTypes as ET, create_event
 from selfdrive.controls.lib.vehicle_model import VehicleModel
-from selfdrive.car.chrysler.carstate import CarState, get_can_parser
+from selfdrive.car.chrysler.carstate import CarState, get_can_parser, get_camera_parser
 from selfdrive.car.chrysler.values import ECU, check_ecu_msgs, CAR
 
 try:
@@ -27,8 +27,8 @@ class CarInterface(object):
 
     # *** init the major players ***
     self.CS = CarState(CP)
-
     self.cp = get_can_parser(CP)
+    self.cp_cam = get_camera_parser(CP)
 
     # sending if read only is False
     if sendcan is not None:
@@ -137,10 +137,9 @@ class CarInterface(object):
   def update(self, c):
     # ******************* do can recv *******************
     canMonoTimes = []
-
     self.cp.update(int(sec_since_boot() * 1e9), False)
-
-    self.CS.update(self.cp)
+    self.cp_cam.update(int(sec_since_boot() * 1e9), False)
+    self.CS.update(self.cp, self.cp_cam)
 
     # create message
     ret = car.CarState.new_message()
@@ -208,6 +207,8 @@ class CarInterface(object):
     self.low_speed_alert = (ret.vEgo < self.CP.minSteerSpeed)
 
     ret.genericToggle = self.CS.generic_toggle
+    #ret.lkasCounter = self.CS.lkas_counter
+    #ret.lkasCarModel = self.CS.lkas_car_model
 
     # events
     events = []
