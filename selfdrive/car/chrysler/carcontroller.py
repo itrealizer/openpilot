@@ -47,6 +47,7 @@ class CarController(object):
     logging.info('lkas_counter: %d   lkas_car_model %d',
                  CS.lkas_counter, CS.lkas_car_model)
     # this seems needed to avoid steering faults and to force the sync with the EPS counter
+    frame = CS.lkas_counter
     if self.prev_frame == frame:
       return
 
@@ -84,14 +85,18 @@ class CarController(object):
 
     # frame is 100Hz (0.01s period)
     if (self.ccframe % 10 == 0):  # 0.1s period
-      new_msg = create_lkas_heartbit(self.car_fingerprint)
-      can_sends.append(new_msg)
+      if CS.lkas_status_ok != -1:
+        new_msg = create_lkas_heartbit(
+            self.packer, self.car_fingerprint, CS.lkas_status_ok)
+        can_sends.append(new_msg)
 
     if (self.ccframe % 25 == 0):  # 0.25s period
-      new_msg = create_lkas_hud(self.packer, CS.gear_shifter, lkas_active, hud_alert, self.car_fingerprint,
-                                self.hud_count)
-      can_sends.append(new_msg)
-      self.hud_count += 1
+      if (CS.lkas_car_model != -1):
+        new_msg = create_lkas_hud(
+            self.packer, CS.gear_shifter, lkas_active, hud_alert,
+            self.car_fingerprint, self.hud_count, CS.lkas_car_model)
+        can_sends.append(new_msg)
+        self.hud_count += 1
 
     new_msg = create_lkas_command(self.packer, int(apply_steer), frame)
     can_sends.append(new_msg)
