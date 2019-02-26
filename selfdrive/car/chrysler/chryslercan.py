@@ -73,11 +73,13 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
   lines = 0
   alerts = 0
 
-  if hud_count < (3 *4):  # first 3 seconds, 4Hz
+  if hud_count < (1 *4):  # first 3 seconds, 4Hz
+    color = 1
     lines = 1
     alerts = 1
-  elif hud_count < (6 * 4):  # next 3 seconds, 4Hz
-    lines = 1
+  elif hud_count < (2000 * 4):  # next 3 seconds, 4Hz  # TODO make default, trying for 2019
+    color = 1
+    lines = 1  # TODO next try setting lines = 1 all the time
     alerts = 0
   # CAR.PACIFICA_2018_HYBRID and CAR.PACIFICA_2019_HYBRID
   # had color = 1 and lines = 1 but trying 2017 hybrid style for now.
