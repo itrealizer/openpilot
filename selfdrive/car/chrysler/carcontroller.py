@@ -29,6 +29,7 @@ class CarController(object):
     self.car_fingerprint = car_fingerprint
     self.alert_active = False
     self.send_chime = False
+    self.gone_fast_yet = False
 
     self.fake_ecus = set()
     if enable_camera:
@@ -51,7 +52,8 @@ class CarController(object):
                                                    CS.steer_torque_motor, SteerLimitParams)
 
     moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
-    moving_fast_almost = CS.v_ego > (CS.CP.minSteerSpeed - 1)  # for command high bit
+    if CS.v_ego > (CS.CP.minSteerSpeed - 1):  # for command high bit
+      self.gone_fast_yet = True
     lkas_active = moving_fast and enabled
 
     if not lkas_active:
@@ -92,7 +94,7 @@ class CarController(object):
         can_sends.append(new_msg)
         self.hud_count += 1
 
-    new_msg = create_lkas_command(self.packer, int(apply_steer), True, frame)
+    new_msg = create_lkas_command(self.packer, int(apply_steer), self.gone_fast_yet, frame)
     can_sends.append(new_msg)
 
     self.ccframe += 1
