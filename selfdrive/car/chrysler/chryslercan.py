@@ -69,18 +69,12 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
     msg = '0000000300000000'.decode('hex')
     return make_can_msg(0x2a6, msg)
 
-  color = 0  # default values are for park or neutral
-  lines = 0
+  color = 1  # default values are for park or neutral in 2017 are 0 0, but trying 1 1 for 2019
+  lines = 1
   alerts = 0
 
   if hud_count < (1 *4):  # first 3 seconds, 4Hz
-    color = 1
-    lines = 1
     alerts = 1
-  elif hud_count < (2000 * 4):  # next 3 seconds, 4Hz  # TODO make default, trying for 2019
-    color = 1
-    lines = 1  # TODO next try setting lines = 1 all the time
-    alerts = 0
   # CAR.PACIFICA_2018_HYBRID and CAR.PACIFICA_2019_HYBRID
   # had color = 1 and lines = 1 but trying 2017 hybrid style for now.
   if gear in ('drive', 'reverse', 'low'):
@@ -102,11 +96,11 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
   return packer.make_can_msg("LKAS_HUD", 0, values)  # 0x2a6
 
 
-def create_lkas_command(packer, apply_steer, frame):
-  # LKAS_COMMAND (658) Lane-keeping signal to turn the wheel.
+def create_lkas_command(packer, apply_steer, moving_fast, frame):
+  # LKAS_COMMAND (658 0x292) Lane-keeping signal to turn the wheel.
   values = {
     "LKAS_STEERING_TORQUE": apply_steer,
-    "LKAS_HIGH_TORQUE": 1,
+    "LKAS_HIGH_TORQUE": int(moving_fast),
     "COUNTER": frame % 0x10,
   }
 
