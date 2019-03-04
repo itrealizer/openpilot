@@ -89,7 +89,7 @@ class CarInterface(object):
     ret.longPidDeadzoneBP = [0., 9.]
     ret.longPidDeadzoneV = [0., .15]
 
-    ret.minSteerSpeed = 18  # 3.8  # m/s
+    ret.minSteerSpeed = 12.5  # 3.8  # m/s
     ret.minEnableSpeed = -1.   # enable is done by stock ACC, so ignore this
 
     centerToRear = ret.wheelbase - ret.centerToFront
