@@ -91,7 +91,7 @@ class CarInterface(object):
 
     # TODO separate the minSteerSpeed for 2019 and other models.
     # TODO For 2019, 17 on the way up, 13 on the way down once engaged.
-    ret.minSteerSpeed = 17.5  # 3.8  # m/s
+    ret.minSteerSpeed = 4.4  # 3.8  # m/s
     ret.minEnableSpeed = -1.   # enable is done by stock ACC, so ignore this
 
     centerToRear = ret.wheelbase - ret.centerToFront
