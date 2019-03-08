@@ -20,7 +20,7 @@ class TestChryslerCan(unittest.TestCase):
     packer = CANPacker('chrysler_pacifica_2017_hybrid')
     self.assertEqual(
         [0x2d9, 0, '0000000820'.decode('hex'), 0],
-        chryslercan.create_lkas_heartbit(packer, CAR.PACIFICA_2017_HYBRID, 0x820))
+        chryslercan.create_lkas_heartbit(packer, 0x820))
 
   def test_hud(self):
     packer = CANPacker('chrysler_pacifica_2017_hybrid')
@@ -28,27 +28,27 @@ class TestChryslerCan(unittest.TestCase):
         [0x2a6, 0, '0100010100000000'.decode('hex'), 0],
         chryslercan.create_lkas_hud(
             packer,
-            'park', False, False, CAR.PACIFICA_2017_HYBRID, 1, 0))
+            'park', False, False, 1, 0))
     self.assertEqual(
         [0x2a6, 0, '0100010000000000'.decode('hex'), 0],
         chryslercan.create_lkas_hud(
             packer,
-            'park', False, False, CAR.PACIFICA_2017_HYBRID, 5*4, 0))
+            'park', False, False, 5*4, 0))
     self.assertEqual(
         [0x2a6, 0, '0100010000000000'.decode('hex'), 0],
         chryslercan.create_lkas_hud(
             packer,
-            'park', False, False, CAR.PACIFICA_2017_HYBRID, 99999, 0))
+            'park', False, False, 99999, 0))
     self.assertEqual(
         [0x2a6, 0, '0200060000000000'.decode('hex'), 0],
         chryslercan.create_lkas_hud(
             packer,
-            'drive', True, False, CAR.PACIFICA_2017_HYBRID, 99999, 0))
+            'drive', True, False, 99999, 0))
     self.assertEqual(
         [0x2a6, 0, '0264060000000000'.decode('hex'), 0],
         chryslercan.create_lkas_hud(
             packer,
-            'drive', True, False, CAR.PACIFICA_2018, 99999, 0x64))
+            'drive', True, False, 99999, 0x64))
 
   def test_command(self):
     packer = CANPacker('chrysler_pacifica_2017_hybrid')
