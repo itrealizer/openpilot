@@ -5,17 +5,8 @@ from selfdrive.car.chrysler.values import CAR
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 AudibleAlert = car.CarControl.HUDControl.AudibleAlert
 
-MODEL_TO_CONSTANT = {
-  CAR.PACIFICA_2017_HYBRID: 0,
-  CAR.PACIFICA_2018: 0x64,
-  CAR.PACIFICA_2018_HYBRID: 0xa8,
-  CAR.PACIFICA_2019_HYBRID: 0x68,
-  CAR.JEEP_CHEROKEE: 0xa4,
-  }
-
 def calc_checksum(data):
   """This function does not want the checksum byte in the input data.
-
   jeep chrysler canbus checksum from http://illmatics.com/Remote%20Car%20Hacking.pdf
   """
   end_index = len(data)
@@ -53,16 +44,14 @@ def calc_checksum(data):
 def make_can_msg(addr, dat):
   return [addr, 0, dat, 0]
 
-def create_lkas_heartbit(packer, car_fingerprint, lkas_status_ok):
-  # LKAS_HEARTBIT (729) Lane-keeping heartbeat.
-  # msg = '0000000820'.decode('hex')  # 2017
+def create_lkas_heartbit(packer, lkas_status_ok):
+  # LKAS_HEARTBIT 0x2d9 (729) Lane-keeping heartbeat.
   values = {
     "LKAS_STATUS_OK": lkas_status_ok
   }
-  return packer.make_can_msg("LKAS_HEARTBIT", 0, values)  # 0x2d9
-  #return make_can_msg(0x2d9, msg)
+  return packer.make_can_msg("LKAS_HEARTBIT", 0, values)
 
-def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_count, lkas_car_model):
+def create_lkas_hud(packer, gear, lkas_active, hud_alert, hud_count, lkas_car_model):
   # LKAS_HUD 0x2a6 (678) Controls what lane-keeping icon is displayed.
 
   if hud_alert == VisualAlert.steerRequired:
@@ -87,7 +76,6 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
 
   values = {
     "LKAS_ICON_COLOR": color,  # byte 0, last 2 bits
-    # "CAR_MODEL": MODEL_TO_CONSTANT[car_fingerprint],  # byte 1
     "CAR_MODEL": lkas_car_model,  # byte 1
     "LKAS_LANE_LINES": lines,  # byte 2, last 4 bits
     "LKAS_ALERTS": alerts,  # byte 3, last 4 bits
@@ -97,7 +85,7 @@ def create_lkas_hud(packer, gear, lkas_active, hud_alert, car_fingerprint, hud_c
 
 
 def create_lkas_command(packer, apply_steer, moving_fast, frame):
-  # LKAS_COMMAND (658 0x292) Lane-keeping signal to turn the wheel.
+  # LKAS_COMMAND 0x292 (658) Lane-keeping signal to turn the wheel.
   values = {
     "LKAS_STEERING_TORQUE": apply_steer,
     "LKAS_HIGH_TORQUE": int(moving_fast),
