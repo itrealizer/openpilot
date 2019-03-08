@@ -4,7 +4,7 @@ from selfdrive.car import apply_toyota_steer_torque_limits
 from selfdrive.car.chrysler.chryslercan import create_lkas_hud, create_lkas_command, \
                                                create_wheel_buttons, create_lkas_heartbit, \
                                                create_chimes
-from selfdrive.car.chrysler.values import ECU
+from selfdrive.car.chrysler.values import ECU, CAR
 from selfdrive.can.packer import CANPacker
 
 AudibleAlert = car.CarControl.HUDControl.AudibleAlert
@@ -54,6 +54,9 @@ class CarController(object):
     moving_fast = CS.v_ego > CS.CP.minSteerSpeed  # for status message
     if CS.v_ego > (CS.CP.minSteerSpeed - 0.5):  # for command high bit
       self.gone_fast_yet = True
+    elif self.car_fingerprint in (CAR.PACIFICA_2019_HYBRID, CAR.JEEP_CHEROKEE_2019):
+      if CS.v_ego < (CS.CP.minSteerSpeed - 3.0):
+        self.gone_fast_yet = False  # < 14.5m/s stock turns off this bit, but fine down to 13.5
     lkas_active = moving_fast and enabled
 
     if not lkas_active:
@@ -82,15 +85,14 @@ class CarController(object):
     # frame is 100Hz (0.01s period)
     if (self.ccframe % 10 == 0):  # 0.1s period
       if CS.lkas_status_ok != -1:
-        new_msg = create_lkas_heartbit(
-            self.packer, self.car_fingerprint, CS.lkas_status_ok)
+        new_msg = create_lkas_heartbit(self.packer, CS.lkas_status_ok)
         can_sends.append(new_msg)
 
     if (self.ccframe % 25 == 0):  # 0.25s period
       if (CS.lkas_car_model != -1):
         new_msg = create_lkas_hud(
             self.packer, CS.gear_shifter, lkas_active, hud_alert,
-            self.car_fingerprint, self.hud_count, CS.lkas_car_model)
+            self.hud_count, CS.lkas_car_model)
         can_sends.append(new_msg)
         self.hud_count += 1
 
